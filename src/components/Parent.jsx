@@ -1,29 +1,29 @@
-import { useEffect, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useEffect, useRef, useState } from 'react';
 
 import Child from './Child';
 
-import { fetchTodos, fetchTodosWithDelay } from '../services';
+import useDetectFetch from '../hooks/useDetectFetch';
 
 function Parent() {
-  const queryClient = useQueryClient();
+  const clockRef = useRef(null);
+  const stopWatchRef = useRef(new Date());
+  const timerRef = useRef(null);
+
   const [isShow, setIsShow] = useState(false);
 
-  const { data, refetch } = useQuery(['todo'], () => {
-    console.log('(parent) fetching start');
-    return fetchTodos();
-  }, {
-    // staleTime: 100,
-    onSuccess: () => {
-      console.log('(parent) fetching success');
-    },
-  });
-
   useEffect(() => {
-    if (data) {
-      console.log('data exist');
+    if (!isShow) {
+      stopWatchRef.current = new Date();
+      timerRef.current = setInterval(() => {
+        clockRef.current.innerText = new Date() - stopWatchRef.current;
+      }, 100);
+    } else {
+      // eslint-disable-next-line no-unused-expressions
+      timerRef.current && clearInterval(timerRef.current);
     }
-  }, [data]);
+  }, [isShow]);
+
+  const isFetching = useDetectFetch();
 
   return (
     <>
@@ -33,18 +33,8 @@ function Parent() {
       >
         show
       </button>
-      <button
-        type="button"
-        onClick={() => refetch()}
-      >
-        refetch
-      </button>
-      <button
-        type="button"
-        onClick={() => queryClient.invalidateQueries()}
-      >
-        invalidate
-      </button>
+      <h1 ref={clockRef}>0.0s</h1>
+      {isFetching && <h2>요청 발생</h2>}
       {isShow && <Child />}
     </>
   );

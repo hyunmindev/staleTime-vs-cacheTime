@@ -1,16 +1,9 @@
 import { useQuery } from 'react-query';
 
-import { fetchTodos, fetchTodosWithDelay } from '../services';
+import { fetchTodos } from '../services';
 
 function Child() {
-  const { data } = useQuery(['todo'], () => {
-    console.log('(parent) fetching start');
-    return fetchTodos();
-  }, {
-    // staleTime: 100,
-  });
-  console.log(data);
-  console.log('(child) rerender');
+  const { data } = useQuery(['todo'], fetchTodos);
 
   return (
     <ul>

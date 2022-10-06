@@ -1,8 +1,12 @@
 import { useRef, useEffect, useState } from 'react';
 
-export default function useDetectFetch() {
+export default function useDetectFetch(resetDeps = []) {
   const count = useRef(-1);
   const [state, setState] = useState(false);
+
+  useEffect(() => {
+    setState(false);
+  }, [...resetDeps]);
 
   useEffect(() => {
     const observer = new PerformanceObserver((list) => {

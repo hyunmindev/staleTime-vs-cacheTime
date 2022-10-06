@@ -23,7 +23,7 @@ function Parent() {
     }
   }, [isShow]);
 
-  const isFetching = useDetectFetch();
+  const isFetching = useDetectFetch([isShow]);
 
   return (
     <>

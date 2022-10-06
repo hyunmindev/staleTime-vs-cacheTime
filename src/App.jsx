@@ -6,8 +6,9 @@ import Parent from './components/Parent';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      suspense: true,
-      staleTime: 1,
+      // suspense: true,
+      // staleTime: 100000,
+      cacheTime: 0,
     },
   },
 });
@@ -15,9 +16,9 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Suspense fallback={<h1>loading..</h1>}>
-        <Parent />
-      </Suspense>
+      {/* <Suspense fallback={<h1>loading..</h1>}> */}
+      <Parent />
+      {/* </Suspense> */}
     </QueryClientProvider>
   );
 }

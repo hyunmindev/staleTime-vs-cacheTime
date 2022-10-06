@@ -1,13 +1,20 @@
 import { useQuery } from 'react-query';
 
-import { fetchTodos } from '../services';
+import { fetchTodos, fetchTodosWithDelay } from '../services';
 
 function Child() {
-  const { data } = useQuery(['todo'], fetchTodos);
+  const { data } = useQuery(['todo'], () => {
+    console.log('(parent) fetching start');
+    return fetchTodos();
+  }, {
+    // staleTime: 100,
+  });
+  console.log(data);
+  console.log('(child) rerender');
 
   return (
     <ul>
-      {data.map((todo) => <li key={todo.id}>{todo.title}</li>)}
+      {(data ?? []).map((todo) => <li key={todo.id}>{todo.title}</li>)}
     </ul>
   );
 }
